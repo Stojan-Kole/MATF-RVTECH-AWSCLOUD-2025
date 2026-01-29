@@ -41,15 +41,9 @@ def sync_data(event, context):
             town = normalize_town(addr.get('Town'), addr.get('Postcode'))
             c_id = str(c.get('ID'))
 
-            status_type = c.get('StatusType')
-            is_operational = False
-            
-            if status_type:
-                is_operational = status_type.get('IsOperational', False)
-                if is_operational is None:
-                    is_operational = status_type.get('ID') == 50
+            status = c.get('StatusType', {}).get('IsOperational')
 
-            items_status = 'Available' if is_operational else 'Offline'
+            items_status = 'Available' if status else 'Offline'
             print(f"Status za {c_id}: {items_status}")
             
             item = {
@@ -64,17 +58,14 @@ def sync_data(event, context):
             items.append(item)
             current_ids.add(c_id)
 
-        print("Upisivanje u bazu...")
         with table.batch_writer() as batch:
             for item in items:
                 batch.put_item(Item=item)
         
-        print("Provera zastarelih zapisa...")
         scan_response = table.scan(ProjectionExpression='chargerId')
         stale_items = [i for i in scan_response.get('Items', []) if i['chargerId'] not in current_ids]
         
         if stale_items:
-            print(f"Brisanje {len(stale_items)} zastarela zapisa...")
             with table.batch_writer() as batch:
                 for si in stale_items:
                     batch.delete_item(Key={'chargerId': si['chargerId']})
@@ -90,7 +81,6 @@ def sync_data(event, context):
         }
 
     except Exception as e:
-        print(f"Greška: {str(e)}")
         return {
             "statusCode": 500,
             "body": json.dumps({"error": str(e)})
