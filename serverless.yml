@@ -1,0 +1,40 @@
+service: matf-ev-charger-app
+
+provider:
+  name: aws
+  runtime: python3.9
+  region: us-east-1
+  stage: local
+  environment:
+    DYNAMODB_TABLE: ${self:service}-chargers-${self:provider.stage}
+
+plugins:
+  - serverless-localstack
+
+custom:
+  localstack:
+    stages:
+      - local
+    host: http://localhost
+    edgePort: 4566
+    autostart: false
+
+functions:
+  GetChargers:
+    handler: backend/handlers/charger_handler.get_all
+    events:
+      - http:
+          path: chargers
+          method: get
+          cors: true
+
+  UpdateStatus:
+    handler: backend/handlers/charger_handler.update_status
+    events:
+      - http:
+          path: chargers/status
+          method: post
+          cors: true
+
+resources:
+  - ${file(infra/resources.yml)}

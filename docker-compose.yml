@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  localstack:
+    container_name: matf-localstack
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"            
+    environment:
+      - SERVICES=dynamodb,lambda,apigateway,s3,iam,cloudformation,sts, logs
+      - DEBUG=1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_DEFAULT_REGION=us-east-1
+    volumes:
+      - "./volume:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
