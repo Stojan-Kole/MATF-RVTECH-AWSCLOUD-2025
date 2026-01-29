@@ -1,5 +1,4 @@
 # Definisanje resursa - Tabela za punjače
-resources:
   Resources:
     ChargersTable:
       Type: AWS::DynamoDB::Table
