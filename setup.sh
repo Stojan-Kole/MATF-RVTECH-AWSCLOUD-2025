@@ -1,6 +1,5 @@
 #!/bin/bash
 
-echo "Resetujem i pokrećem MATF RVTECH projekat..."
 
 echo "Čistim stare kontejnere i privremene fajlove..."
 docker-compose down -v --remove-orphans
@@ -11,20 +10,37 @@ if [ ! -d "node_modules" ]; then
     npm install
 fi
 
-echo "Podižem LocalStack (Docker)..."
+
 docker-compose up -d
 
-echo "Čekam da LocalStack servisi postanu dostupni..."
 for i in {1..30}; do
     if curl -s http://localhost:4566/_localstack/health | grep -q '"cloudformation": "available"'; then
         echo "LocalStack je spreman!"
         break
     fi
     echo "..."
-    sleep 2
+    sleep 3
 done
 
-echo "Deploy-ujem infrastrukturu na LocalStack..."
 npx sls deploy --stage local
 
-echo "Skelet je podignut i spreman za rad!"
+API_ID=$(awslocal apigateway get-rest-apis --query "items[?name=='local-matf-ev-charger-app'].id" --output text)
+
+if [ -z "$API_ID" ] || [ "$API_ID" == "None" ]; then
+    echo "UPOZORENJE: Nisam uspeo da pronađem API ID. Frontend možda neće raditi ispravno."
+else
+    echo "Pronađen API ID: $API_ID"
+    API_URL="http://localhost:4566/restapis/$API_ID/local/_user_request_/chargers"
+    
+    cat > frontend/js/config.js <<EOF
+const API_CONFIG = {
+    apiUrl: "$API_URL"
+};
+EOF
+    echo "Frontend konfigurisan sa URL-om: $API_URL"
+    
+    echo "Sinhronizujem podatke (prvo punjenje)..."
+    awslocal lambda invoke --function-name matf-ev-charger-app-local-SyncOCM response.json > /dev/null 2>&1
+    rm -f response.json
+fi
+

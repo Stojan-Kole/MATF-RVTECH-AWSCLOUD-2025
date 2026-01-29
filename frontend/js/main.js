@@ -7,32 +7,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }).addTo(map);
 
     let markers = [];
-    const loadButton = document.getElementById('load-btn');
-    const apiUrlInput = document.getElementById('apiUrl');
     const chargerListEl = document.getElementById('charger-list-items');
 
-    loadButton.addEventListener('click', loadChargers);
-
-    // Initial load if desired
-    // loadChargers();
+    loadChargers();
 
     async function loadChargers() {
-        const apiUrl = apiUrlInput.value.trim();
-        if (!apiUrl) {
-            alert('Molimo unesite API URL');
+        if (typeof API_CONFIG === 'undefined' || !API_CONFIG.apiUrl) {
+            console.error("API_CONFIG nije definisan. Proverite js/config.js.");
+            chargerListEl.innerHTML = '<li style="padding:1rem; color:red; text-align:center;">Greška: Nedostaje konfiguracija (pokušajte ponovo ./setup.sh)</li>';
             return;
         }
 
-        loadButton.disabled = true;
-        loadButton.textContent = 'Učitavanje...';
+        const apiUrl = API_CONFIG.apiUrl;
+        console.log("Auto-učitavanje sa:", apiUrl);
 
-        // Očisti stare markere
-        markers.forEach(m => map.removeLayer(m));
-        markers = [];
-        chargerListEl.innerHTML = '';
+        chargerListEl.innerHTML = '<li style="padding:1rem; text-align:center;">Učitavanje podataka...</li>';
 
         try {
-            console.log("Učitavam punjače sa:", apiUrl);
             const response = await fetch(apiUrl);
 
             if (!response.ok) {
@@ -42,23 +33,26 @@ document.addEventListener('DOMContentLoaded', () => {
             const chargers = await response.json();
             console.log("Pronađeno punjača:", chargers.length);
 
+            chargerListEl.innerHTML = '';
+            markers.forEach(m => map.removeLayer(m));
+            markers = [];
+
             if (chargers.length === 0) {
                 chargerListEl.innerHTML = '<li style="padding:1rem; text-align:center;">Nema pronađenih punjača.</li>';
                 return;
             }
 
             chargers.forEach(charger => {
-                // Backend vraća ravnu strukturu
                 const lat = charger.latitude;
                 const lon = charger.longitude;
                 const title = charger.title || 'Nepoznat punjač';
                 const status = charger.status || 'Unknown';
                 const town = charger.town || 'N/A';
+
                 const id = charger.chargerId;
 
                 if (lat && lon) {
                     const statusClass = status.toLowerCase() === 'available' ? 'available' : 'offline';
-                    const markerColor = statusClass === 'available' ? 'blue' : 'red'; // Leaflet default markers are blue, can use custom icons later
 
                     const marker = L.marker([lat, lon]).addTo(map);
                     marker.bindPopup(`
@@ -70,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     `);
                     markers.push(marker);
 
-                    // Dodaj u listu
                     const li = document.createElement('li');
                     li.className = 'charger-item';
                     li.innerHTML = `
@@ -88,7 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // Fit map to markers bounds if there are any
             if (markers.length > 0) {
                 const group = new L.featureGroup(markers);
                 map.fitBounds(group.getBounds().pad(0.1));
@@ -96,10 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error("Greška prilikom učitavanja:", error);
-            alert("Došlo je do greške prilikom učitavanja punjača.\nProverite konzolu i validnost URL-a.");
-        } finally {
-            loadButton.disabled = false;
-            loadButton.textContent = 'Učitaj punjače';
+            chargerListEl.innerHTML = '<li style="padding:1rem; color:red; text-align:center;">Greška prilikom učitavanja podataka.</li>';
         }
     }
 });

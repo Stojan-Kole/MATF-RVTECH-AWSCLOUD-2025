@@ -28,22 +28,10 @@
 
     <div class="container">
         <aside>
-            <div class="controls">
-                <div class="form-group">
-                    <label for="apiUrl">API URL</label>
-                    <input type="text" id="apiUrl"
-                        value="http://localhost:4566/restapis/xo4f2vc8qb/local/_user_request_/chargers"
-                        placeholder="Unesite API URL">
-                    <span class="hint">ID API-ja je pre-popunjen (xo4f2vc8qb).</span>
-                </div>
-                <button id="load-btn">Učitaj punjače</button>
-            </div>
-
             <div id="charger-list">
                 <h3>Lista Punjača</h3>
                 <ul id="charger-list-items">
-                    <li style="padding: 1rem; color: #6b7280; text-align: center;">Kliknite "Učitaj punjače" za prikaz.
-                    </li>
+                    <li style="padding: 1rem; color: #6b7280; text-align: center;">Učitavanje...</li>
                 </ul>
             </div>
         </aside>
@@ -53,8 +41,9 @@
         </section>
     </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/config.js"></script>
     <script src="js/main.js"></script>
 </body>
 
