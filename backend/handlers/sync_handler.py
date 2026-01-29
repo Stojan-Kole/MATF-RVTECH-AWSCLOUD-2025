@@ -24,7 +24,7 @@ def sync_data(event, context):
     api_key = os.environ.get('OCM_API_KEY')
     ocm_url = os.environ.get('OCM_URL')
     
-    params = f"?key={api_key}&countrycode=RS&maxresults=1000&compact=true&verbose=false"
+    params = f"?key={api_key}&countrycode=RS&maxresults=1000&compact=false&verbose=false"
     
     try:
         print("Preuzimanje punjača sa OCM-a...")
