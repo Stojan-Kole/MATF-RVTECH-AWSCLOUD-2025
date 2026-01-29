@@ -7,7 +7,7 @@ Ovaj repozitorijum sadrži projekat za kurs Cloud tehnologije na MATF-u. Projeka
 ### 1. Git Flow i Organizacija
 - Korišćenje Git Flow metodologije (`main`, `develop`, `feature` grane).
 - Struktura foldera:
-  - `/infra` - Infrastructure as Code (Terraform/CloudFormation).
+  - `/infra` - Infrastructure as Code (serverless/CloudFormation).
   - `/backend` - AWS Lambda funkcije (Python).
   - `/frontend` - Web aplikacija (HTML/JS/Other).
 
