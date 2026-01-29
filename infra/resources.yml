@@ -1,15 +1,21 @@
-# Definisanje resursa - Tabela za punjače
-  Resources:
-    ChargersTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: chargers-local
-        AttributeDefinitions:
-          - AttributeName: charger_id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: charger_id
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+Resources:
+  ChargersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: ${self:provider.environment.DYNAMODB_TABLE}
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: chargerId
+          AttributeType: S
+        - AttributeName: town
+          AttributeType: S
+      KeySchema:
+        - AttributeName: chargerId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: TownIndex
+          KeySchema:
+            - AttributeName: town
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL

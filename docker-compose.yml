@@ -7,7 +7,7 @@ services:
     ports:
       - "4566:4566"            
     environment:
-      - SERVICES=dynamodb,lambda,apigateway,s3,iam,cloudformation,sts, logs
+      - SERVICES=dynamodb,lambda,apigateway,s3,iam,cloudformation,sts, logs, events, scheduler
       - DEBUG=1
       - DOCKER_HOST=unix:///var/run/docker.sock
       - AWS_DEFAULT_REGION=us-east-1

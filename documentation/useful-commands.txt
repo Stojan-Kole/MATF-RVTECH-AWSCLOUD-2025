@@ -1,0 +1,1 @@
+1. awslocal dynamodb describe-table --table-name matf-ev-charger-app-chargers-local   (Prikazivanje nase baze)

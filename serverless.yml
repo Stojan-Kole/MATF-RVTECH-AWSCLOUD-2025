@@ -6,7 +6,9 @@ provider:
   region: us-east-1
   stage: local
   environment:
-    DYNAMODB_TABLE: ${self:service}-chargers-${self:provider.stage}
+    OCM_API_KEY: '69d86e58-df21-406b-b837-cc07c35ddd41'
+    OCM_URL: 'https://api.openchargemap.io/v3/poi'
+    DYNAMODB_TABLE: matf-ev-charger-app-chargers-local
 
 plugins:
   - serverless-localstack
@@ -27,6 +29,17 @@ functions:
           path: chargers
           method: get
           cors: true
+
+  SyncOCM:
+    handler: backend/handlers/sync_handler.sync_data
+    timeout: 30
+    memorySize: 256
+    events:
+      - http:
+          path: sync
+          method: get
+      - schedule:
+          rate: rate(1 minute)
 
   UpdateStatus:
     handler: backend/handlers/charger_handler.update_status

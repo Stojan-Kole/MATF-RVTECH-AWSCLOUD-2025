@@ -7,7 +7,7 @@ docker-compose down -v --remove-orphans
 rm -rf .serverless
 
 if [ ! -d "node_modules" ]; then
-    echo "📦 Instaliram Node.js pakete..."
+    echo "Instaliram Node.js pakete..."
     npm install
 fi
 
