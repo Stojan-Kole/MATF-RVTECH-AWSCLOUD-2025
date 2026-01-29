@@ -42,5 +42,15 @@ EOF
     echo "Sinhronizujem podatke (prvo punjenje)..."
     awslocal lambda invoke --function-name matf-ev-charger-app-local-SyncOCM response.json > /dev/null 2>&1
     rm -f response.json
+
+    npm run deploy-frontend
+
+    WEBSITE_URL="http://local-matf-ev-charger-frontend.s3-website.localhost:4566"
+    
+    echo "----------------------------------------------------"
+    echo "Aplikacija je spremna!"
+    echo "S3 Website URL: $WEBSITE_URL"
+    echo "API Endpoint: $API_URL"
+    echo "----------------------------------------------------"
 fi
 

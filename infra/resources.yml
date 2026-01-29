@@ -19,3 +19,12 @@ Resources:
               KeyType: HASH
           Projection:
             ProjectionType: ALL
+
+  FrontendBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: local-matf-ev-charger-frontend
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: index.html
