@@ -24,7 +24,18 @@ def sync_data(event, context):
     api_key = os.environ.get('OCM_API_KEY')
     ocm_url = os.environ.get('OCM_URL')
     
-    countries = ['RS', 'XK']
+    countries = ['RS', 'XK', 'BA']
+    
+    # Gradovi u Republici Srpskoj (i Brčko) za filtriranje
+    rs_towns = [
+        'Banja Luka', 'Bijeljina', 'Prijedor', 'Doboj', 'Trebinje', 
+        'Zvornik', 'Gradiška', 'Laktaši', 'Istočno Sarajevo', 'Pale', 
+        'Foča', 'Višegrad', 'Derventa', 'Modriča', 'Prnjavor',
+        'Mrkonjić Grad', 'Bileća', 'Rogatica', 'Sokolac', 'Šipovo', 
+        'Čelinac', 'Bratunac', 'Kozarska Dubica', 'Novi Grad', 'Teslić', 
+        'Brod', 'Šamac', 'Ugljevik', 'Vlasenica', 'Nevesinje', 'Brčko', 'Brcko', 'Dabrac', 'Jahorina'
+    ]
+    
     chargers = []
     
     try:
@@ -33,8 +44,28 @@ def sync_data(event, context):
             params = f"?key={api_key}&countrycode={country}&maxresults=1000&compact=false&verbose=false"
             response = http.request('GET', f"{ocm_url}{params}")
             data = json.loads(response.data.decode('utf-8'))
-            chargers.extend(data)
-            print(f"Preuzeto {len(data)} punjača za {country}.")
+            
+            if country == 'BA':
+                filtered_data = []
+                for c in data:
+                    addr = c.get('AddressInfo', {})
+                    state = addr.get('StateOrProvince', '') or ''
+                    town = addr.get('Town', '') or ''
+                    
+                    is_rs_or_brcko = (
+                        "srpska" in state.lower() or 
+                        any(t.lower() in town.lower() for t in rs_towns)
+                    )
+                    
+                    if is_rs_or_brcko:
+                        filtered_data.append(c)
+                
+                print(f"Filtrirano {len(filtered_data)} punjača za Republiku Srpsku od {len(data)}.")
+                chargers.extend(filtered_data)
+            else:
+                chargers.extend(data)
+                
+            print(f"Preuzeto (ukupno validnih) {len(data)} punjača za {country}.")
             
         print(f"Ukupno preuzeto {len(chargers)} punjača.")
 

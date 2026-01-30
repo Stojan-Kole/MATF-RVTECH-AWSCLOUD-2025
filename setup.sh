@@ -1,8 +1,18 @@
 #!/bin/bash
 
+if docker compose version >/dev/null 2>&1; then
+    DOCKER_COMPOSE="docker compose"
+elif docker-compose --version >/dev/null 2>&1; then
+    DOCKER_COMPOSE="docker-compose"
+else
+    echo "Greška: Ni 'docker compose' ni 'docker-compose' nisu pronađeni. Molimo instalirajte Docker Compose."
+    exit 1
+fi
+
+echo "Koristim: $DOCKER_COMPOSE"
 
 echo "Čistim stare kontejnere i privremene fajlove..."
-docker compose down -v --remove-orphans
+$DOCKER_COMPOSE down -v --remove-orphans
 rm -rf .serverless
 
 if [ ! -d "node_modules" ]; then
@@ -11,7 +21,7 @@ if [ ! -d "node_modules" ]; then
 fi
 
 
-docker compose up -d
+$DOCKER_COMPOSE up -d
 
 for i in {1..30}; do
     if curl -s http://localhost:4566/_localstack/health | grep -q '"cloudformation": "available"'; then
