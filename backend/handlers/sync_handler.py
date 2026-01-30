@@ -24,13 +24,19 @@ def sync_data(event, context):
     api_key = os.environ.get('OCM_API_KEY')
     ocm_url = os.environ.get('OCM_URL')
     
-    params = f"?key={api_key}&countrycode=RS&maxresults=1000&compact=false&verbose=false"
+    countries = ['RS', 'XK']
+    chargers = []
     
     try:
-        print("Preuzimanje punjača sa OCM-a...")
-        response = http.request('GET', f"{ocm_url}{params}")
-        chargers = json.loads(response.data.decode('utf-8'))
-        print(f"Preuzeto {len(chargers)} punjača.")
+        for country in countries:
+            print(f"Preuzimanje punjača sa OCM-a za {country}...")
+            params = f"?key={api_key}&countrycode={country}&maxresults=1000&compact=false&verbose=false"
+            response = http.request('GET', f"{ocm_url}{params}")
+            data = json.loads(response.data.decode('utf-8'))
+            chargers.extend(data)
+            print(f"Preuzeto {len(data)} punjača za {country}.")
+            
+        print(f"Ukupno preuzeto {len(chargers)} punjača.")
 
         ttl = int(time.time()) + 2 * 24 * 60 * 60 # TTL 2 dana
         items = []

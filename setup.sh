@@ -2,7 +2,7 @@
 
 
 echo "Čistim stare kontejnere i privremene fajlove..."
-docker-compose down -v --remove-orphans
+docker compose down -v --remove-orphans
 rm -rf .serverless
 
 if [ ! -d "node_modules" ]; then
@@ -11,7 +11,7 @@ if [ ! -d "node_modules" ]; then
 fi
 
 
-docker-compose up -d
+docker compose up -d
 
 for i in {1..30}; do
     if curl -s http://localhost:4566/_localstack/health | grep -q '"cloudformation": "available"'; then
