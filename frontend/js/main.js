@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Inicijalizacija mape
     const map = L.map('map').setView([44.7866, 20.4489], 12); // Centrirano na Beograd
+    window.leafletMap = map;
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
