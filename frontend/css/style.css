@@ -132,6 +132,111 @@ button:hover {
     height: 100%;
 }
 
+#closest-stations {
+    background: var(--card-bg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+#closest-stations h3 {
+    margin-top: 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.closest-hint {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin: 0 0 0.75rem 0;
+}
+
+#closest-stations-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.closest-placeholder {
+    padding: 0.75rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+.empty-state {
+    padding: 1rem;
+    text-align: center;
+    list-style: none;
+}
+
+.empty-state p {
+    margin: 0 0 0.5rem;
+    color: #374151;
+}
+
+.empty-state .empty-hint {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 1rem;
+}
+
+.empty-state.error-state p {
+    color: #b91c1c;
+}
+
+.btn-load-chargers {
+    padding: 0.5rem 1rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 0.875rem;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.btn-load-chargers:hover:not(:disabled) {
+    background: var(--secondary-color);
+}
+
+.btn-load-chargers:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.closest-station-item {
+    padding: 0.75rem;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.closest-station-item:last-child {
+    border-bottom: none;
+}
+
+.closest-station-item:hover {
+    background-color: #f9fafb;
+}
+
+.closest-station-name {
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.closest-station-distance {
+    font-size: 0.8125rem;
+    color: var(--primary-color);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
 #charger-list h3 {
     margin-top: 0;
     padding-bottom: 0.5rem;
