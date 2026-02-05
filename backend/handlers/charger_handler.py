@@ -44,27 +44,3 @@ def get_all(event, context):
     except Exception as e:
         print(f"Greška u get_all: {str(e)}")
         return {"statusCode": 500, "body": json.dumps({"error": str(e)})}
-
-def update_status(event, context):
-    try:
-        body = json.loads(event.get('body', '{}'))
-        charger_id = body.get('chargerId')
-        new_status = body.get('status')
-
-        if not charger_id or not new_status:
-            return {"statusCode": 400, "body": "Missing chargerId or status"}
-
-        table.update_item(
-            Key={'chargerId': str(charger_id)},
-            UpdateExpression="set #s = :s",
-            ExpressionAttributeNames={'#s': 'status'},
-            ExpressionAttributeValues={':s': new_status}
-        )
-
-        return {
-            "statusCode": 200,
-            "headers": {"Access-Control-Allow-Origin": "*"},
-            "body": json.dumps({"message": f"Status updated for {charger_id}"})
-        }
-    except Exception as e:
-        return {"statusCode": 500, "body": json.dumps({"error": str(e)})}
