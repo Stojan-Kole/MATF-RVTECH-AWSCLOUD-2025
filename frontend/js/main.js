@@ -14,6 +14,38 @@ document.addEventListener('DOMContentLoaded', () => {
     let userLon = null;
     const chargerIdToMarker = new Map();
 
+    // Event Listeners for Search
+    const searchBtn = document.getElementById('btn-search-city');
+    const clearBtn = document.getElementById('btn-clear-search');
+    const searchInput = document.getElementById('city-search-input');
+
+    if (searchBtn) {
+        searchBtn.addEventListener('click', () => {
+            const town = searchInput.value.trim();
+            if (town) {
+                loadChargers(town);
+            }
+        });
+    }
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            loadChargers(); // Load all
+        });
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const town = searchInput.value.trim();
+                if (town) {
+                    loadChargers(town);
+                }
+            }
+        });
+    }
+
     loadChargers();
     enableLiveLocation(map);
 
@@ -97,14 +129,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function loadChargers() {
+    async function loadChargers(town = null) {
         if (typeof API_CONFIG === 'undefined' || !API_CONFIG.apiUrl) {
             console.error("API_CONFIG nije definisan. Proverite js/config.js.");
             chargerListEl.innerHTML = '<li style="padding:1rem; color:red; text-align:center;">Greška: Nedostaje konfiguracija (pokušajte ponovo ./setup.sh)</li>';
             return;
         }
 
-        const apiUrl = API_CONFIG.apiUrl;
+        let apiUrl = API_CONFIG.apiUrl;
+        if (town) {
+            // Append query param. Assume apiUrl doesn't represent query params yet
+            apiUrl += `?town=${encodeURIComponent(town)}`;
+        }
         console.log("Auto-učitavanje sa:", apiUrl);
 
         chargerListEl.innerHTML = '<li style="padding:1rem; text-align:center;">Učitavanje podataka...</li>';
