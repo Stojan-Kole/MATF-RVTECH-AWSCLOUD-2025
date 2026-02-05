@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const chargerListEl = document.getElementById('charger-list-items');
 
     loadChargers();
+    enableLiveLocation(map);
 
     async function loadChargers() {
         if (typeof API_CONFIG === 'undefined' || !API_CONFIG.apiUrl) {
@@ -90,5 +91,53 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Greška prilikom učitavanja:", error);
             chargerListEl.innerHTML = '<li style="padding:1rem; color:red; text-align:center;">Greška prilikom učitavanja podataka.</li>';
         }
+    }
+
+    function enableLiveLocation(map) {
+        if (!navigator.geolocation) {
+            console.log("Geolocation is not supported by your browser");
+            return;
+        }
+
+        let userMarker, accuracyCircle;
+        let firstLocationUpdate = true;
+
+        navigator.geolocation.watchPosition(
+            (position) => {
+                const { latitude, longitude, accuracy } = position.coords;
+                // console.log(`Live Location: ${latitude}, ${longitude} (Accuracy: ${accuracy}m)`);
+
+                if (userMarker) {
+                    userMarker.setLatLng([latitude, longitude]);
+                    accuracyCircle.setLatLng([latitude, longitude]);
+                    accuracyCircle.setRadius(accuracy);
+                } else {
+                    // Create Custom Pulse Icon
+                    const pulseIcon = L.divIcon({
+                        className: 'user-location-marker',
+                        html: '<div class="user-location-pulse"></div><div class="user-location-dot"></div>',
+                        iconSize: [20, 20],
+                        iconAnchor: [10, 10]
+                    });
+
+                    userMarker = L.marker([latitude, longitude], { icon: pulseIcon }).addTo(map);
+                    accuracyCircle = L.circle([latitude, longitude], { radius: accuracy, startAngle: 45 }).addTo(map); // startAngle for nice overlap if supported, else ignored, standard circle is fine
+                }
+
+                if (firstLocationUpdate) {
+                    map.setView([latitude, longitude], 13);
+                    firstLocationUpdate = false;
+                }
+            },
+            (error) => {
+                console.error("Geolocation error:", error);
+                // Optional: Show toast or ignore
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            }
+        );
     }
 });

@@ -49,7 +49,8 @@ h1 {
     height: 60vh;
     min-height: 400px;
     width: 100%;
-    order: -1; /* Map on top */
+    order: -1;
+    /* Map on top */
 }
 
 #map {
@@ -176,12 +177,12 @@ button:hover {
     .container {
         height: auto;
     }
-    
+
     aside {
         grid-template-columns: 1fr;
         height: auto;
     }
-    
+
     #map-container {
         height: 50vh;
     }
@@ -204,7 +205,8 @@ button:hover {
 }
 
 .modal-content {
-    background-color: #0f172a; /* Darker background for contrast */
+    background-color: #0f172a;
+    /* Darker background for contrast */
     padding: 2.5rem;
     border-radius: 1rem;
     box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
@@ -225,7 +227,8 @@ button:hover {
 }
 
 .modal h2 {
-    color: #38bdf8; /* Cyan */
+    color: #38bdf8;
+    /* Cyan */
     margin-bottom: 1rem;
     font-size: 2.2rem;
     font-family: 'Courier New', Courier, monospace;
@@ -251,8 +254,15 @@ button:hover {
 }
 
 @keyframes blink {
-    from, to { opacity: 1; }
-    50% { opacity: 0; }
+
+    from,
+    to {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
 }
 
 .close-button {
@@ -273,11 +283,68 @@ button:hover {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes scaleIn {
-    from { transform: scale(0.9); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* User Location Marker */
+.user-location-marker {
+    background-color: transparent;
+    border: none;
+}
+
+.user-location-dot {
+    width: 12px;
+    height: 12px;
+    background-color: #2563eb;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.user-location-pulse {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(37, 99, 235, 0.2);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: location-pulse 2s infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes location-pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
 }
