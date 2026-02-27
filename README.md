@@ -1,8 +1,13 @@
-# MATF-RVTECH-AWSCLOUD-2025
+![Ceo ekran](https://github.com/user-attachments/assets/5e10b048-7db6-498c-9c80-a4c13ea469f6)# MATF-RVTECH-AWSCLOUD-2025
 
 Ovaj repozitorijum sadrži projekat za kurs Cloud tehnologije na MATF-u. Projekat predstavlja serverless aplikaciju za mapu električnih punjača izgrađenu na AWS platformi.
 
+## Izgled aplikacije
+![Ceo ekran](https://github.com/user-attachments/assets/6d7287ae-eadf-4f88-825a-7296616d8758)
+![Beograd](https://github.com/user-attachments/assets/10e7f550-3017-42fe-bf28-f1a202369726)
+
 ## Plan i Faze Projekta (Inicijalna verzija)
+
 
 ### 1. Git Flow i Organizacija
 - Korišćenje Git Flow metodologije (`main`, `develop`, `feature` grane).
