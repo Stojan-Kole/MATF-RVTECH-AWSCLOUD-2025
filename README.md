@@ -1,5 +1,3 @@
-![Ceo ekran](https://github.com/user-attachments/assets/5e10b048-7db6-498c-9c80-a4c13ea469f6)# MATF-RVTECH-AWSCLOUD-2025
-
 Ovaj repozitorijum sadrži projekat za kurs Cloud tehnologije na MATF-u. Projekat predstavlja serverless aplikaciju za mapu električnih punjača izgrađenu na AWS platformi.
 
 ## Izgled aplikacije
